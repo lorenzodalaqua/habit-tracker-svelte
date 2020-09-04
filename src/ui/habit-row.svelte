@@ -42,6 +42,11 @@
   }
   input[type='checkbox']:before {
     display: block;
+    content: attr(data-day);
+    font-size: 0.8em;
+    display: grid;
+    justify-items: center;
+    align-items: center;
     width: 100%;
     height: 100%;
   }
@@ -98,6 +103,7 @@
           {name} - {day}/{month}/{year}
         </label>
         <input
+          data-day={day + 1}
           id={`${day}-${key}`}
           type="checkbox"
           checked={value}
