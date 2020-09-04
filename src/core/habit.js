@@ -60,7 +60,6 @@ export default class Habit {
   }
 
   saveToLocalStorage() {
-    console.log(`Saving habit: ${this.name}`);
     localStorage.setItem(
       `habit-${this.id}`,
       JSON.stringify({
@@ -80,7 +79,6 @@ export default class Habit {
     this.color = stored.color || '#08f08f';
     this.tracker = stored.tracker || {};
     this.negative = stored.negative || false;
-    console.log(`Loading habit: ${this.name}`);
     return this;
   }
 }

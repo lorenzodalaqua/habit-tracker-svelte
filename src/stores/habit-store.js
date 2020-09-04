@@ -16,7 +16,7 @@ export function createHabitStore(key) {
       update(habit => habit.toggleDay(day, month, year)),
     setName: name => update(habit => habit.setName(name)),
     setColor: color => update(habit => habit.setColor(color)),
-    save: () => update(habit => habit.saveToLocalStorage()),
+    save: () => habit.saveToLocalStorage(),
     load: () => update(habit => habit.loadFromLocalStorage(habit.id))
   };
 }
