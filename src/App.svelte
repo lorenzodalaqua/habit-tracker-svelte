@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import HabitRow from './ui/row-wrapper.svelte';
-  import { readDoc, readAll, storeDoc } from './core/firebase';
 
   const date = new Date();
   let month = date.getMonth() + 1;
@@ -20,17 +19,6 @@
   function loadFromLocalStorage() {
     habits = Number(localStorage.getItem('habits-number'));
   }
-  function saveFirebase() {
-    storeDoc('testing', 'new', {
-      id: '2',
-      name: 'lorenzo',
-      date: new Date()
-    }).then(doc => console.log('Saved:', doc));
-  }
-  function loadFirebase() {
-    //readDoc('testing', 'lorenzo').then(doc => console.log('Loaded:', doc));
-    readAll('testing').then(docs => docs.forEach(doc => console.log(doc)));
-  }
   onMount(loadFromLocalStorage);
 </script>
 
@@ -42,8 +30,6 @@
 
 <svelte:window on:focus={loadFromLocalStorage} on:blur={saveToLocalStorage} />
 <main>
-  <button on:click={saveFirebase}>SaveFirebase</button>
-  <button on:click={loadFirebase}>LoadFirebase</button>
   <div>
     <select bind:value={month}>
       {#each months as monthNumber}
