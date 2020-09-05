@@ -72,11 +72,17 @@ export default class Habit {
     );
   }
 
+  getRandomColor() {
+    const key = Math.floor(Math.random() * 5);
+    const colors = ['#18F07A', '#F0DA56', '#F09B3A', '#F03322', '#5E4DF0'];
+    return colors[key];
+  }
+
   loadFromLocalStorage(id) {
     const stored = JSON.parse(localStorage.getItem(`habit-${id}`)) || {};
     this.id = id;
     this.name = stored.name || '';
-    this.color = stored.color || '#08f08f';
+    this.color = stored.color || this.getRandomColor();
     this.tracker = stored.tracker || {};
     this.negative = stored.negative || false;
     return this;

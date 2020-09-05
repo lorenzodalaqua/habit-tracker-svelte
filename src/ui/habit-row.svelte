@@ -3,47 +3,97 @@
 </script>
 
 <style>
-  input {
-    border: 1px solid #777;
-    border-right: 0;
-    border-radius: 0;
+  :root {
+    --input-size: 2em;
+  }
+
+  .row {
+    width: 100%;
     margin: 0;
-    padding: 0;
+    margin-bottom: 0.25em;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
   }
 
-  input:focus {
-    outline: 2px dotted var(--habit-color);
-  }
-
-  input[type='color'] {
-    width: 1.3rem;
-    height: 1.3rem;
+  .checkboxes {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   input[type='text'] {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  @media all and (min-width: 700px) {
+    :root {
+      --input-size: 1.8em;
+    }
+
+    input[type='text'] {
+      min-width: 15em;
+      flex: 1 1 15em;
+    }
+
+    input:hover {
+      box-shadow: inset 5px 5px 10px #e0e0e0, inset -5px -5px 10px #ffffff;
+    }
+
+    input[type='checkbox']:checked:hover {
+      border: 1px solid var(--habit-color);
+    }
+  }
+
+  input {
+    border-radius: 5px;
+    background: #ffffff;
+    box-shadow: 5px 5px 10px #e0e0e0, -5px -5px 10px #ffffff;
+    transition: box-shadow 200ms ease-in;
+    margin: 0;
+    padding: 0;
+    margin: 5px;
+  }
+
+  input[type='color'] {
+    border: 0;
+    background: white;
+    width: var(--input-size);
+    height: var(--input-size);
+  }
+
+  input[type='text'] {
+    border: 0;
     color: var(--habit-color);
     font-weight: bold;
     font-size: 0.9em;
-    width: 15em;
     padding: 0 0.2em;
-    height: 1.3rem;
+    height: var(--input-size);
   }
 
   input[type='checkbox'] {
     -webkit-appearance: none;
     appearance: none;
     position: relative;
-    width: 1.3rem;
-    height: 1.3rem;
+    width: var(--input-size);
+    height: var(--input-size);
     display: flex;
   }
   input[type='checkbox']:checked {
-    background-color: var(--habit-color);
+    color: var(--habit-color);
+    box-shadow: inset 5px 5px 10px #e0e0e0, inset -5px -5px 10px #ffffff;
   }
   input[type='checkbox']:before {
     display: block;
+    color: var(--habit-color);
+
     content: attr(data-day);
-    font-size: 0.8em;
+    font-size: 0.9em;
+    font-weight: bold;
     display: grid;
     justify-items: center;
     align-items: center;
@@ -53,10 +103,14 @@
   input[type='checkbox']:checked:before {
     display: block;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    border-radius: 50%;
+    background-color: var(--habit-color);
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
     margin: 0;
     display: flex;
     align-items: center;
@@ -64,40 +118,39 @@
     line-height: 1;
     content: '✔️';
     color: white !important;
-    font-size: 1em;
+    font-size: 0.8em;
+  }
+
+  input[type='checkbox']:focus:checked:before,
+  input[type='checkbox']:checked:hover:before {
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
   }
 
   input[type='checkbox']:disabled {
     background: #efefef;
   }
 
-  .row {
-    width: auto;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 0;
-    border-right: 1px solid #777;
-    margin-bottom: 0.25em;
-  }
-
-  .checkboxes {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  input:focus {
+    outline: none;
+    border: 1px solid var(--habit-color);
   }
 </style>
 
 <div class="list" style="--habit-color: {color}">
   <div class="row">
-    <label class="hidden" for={`name-${key}`}>Nome do hábito:</label>
-    <input
-      id={`name-${key}`}
-      type="text"
-      placeholder="What is your next new habit?"
-      value={name}
-      on:input={setName} />
     <div class="checkboxes">
+      <label class="hidden" for={`name-${key}`}>Nome do hábito:</label>
+      <input
+        id={`name-${key}`}
+        type="text"
+        placeholder="What is your next new habit?"
+        value={name}
+        on:input={setName} />
       {#each days as value, day}
         <label class="hidden" for={`${day}-${key}`}>
           {name} - {day}/{month}/{year}
@@ -109,12 +162,12 @@
           checked={value}
           on:change={() => toggleDay(day)} />
       {/each}
+      <label class="hidden" for={`${key}-color`}>Cor do hábito {name}</label>
+      <input
+        id={`${key}-color`}
+        type="color"
+        value={color}
+        on:change={setColor} />
     </div>
-    <label class="hidden" for={`${key}-color`}>Cor do hábito {name}</label>
-    <input
-      id={`${key}-color`}
-      type="color"
-      value={color}
-      on:change={setColor} />
   </div>
 </div>
