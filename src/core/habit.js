@@ -73,8 +73,15 @@ export default class Habit {
   }
 
   getRandomColor() {
-    const key = Math.floor(Math.random() * 5);
-    const colors = ['#18F07A', '#F0DA56', '#F09B3A', '#F03322', '#5E4DF0'];
+    const key = Math.floor(Math.random() * 6);
+    const colors = [
+      '#f80f80',
+      '#f08f08',
+      '#08f08f',
+      '#0f80f8',
+      '#80f80f',
+      '#8f08f0'
+    ];
     return colors[key];
   }
 

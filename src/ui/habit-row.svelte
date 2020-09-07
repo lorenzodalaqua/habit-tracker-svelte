@@ -4,7 +4,10 @@
 
 <style>
   :root {
-    --input-size: 2em;
+    --input-size: 1.8em;
+    --pressed-shadow: inset -5px -5px 15px #ffffff, inset 5px 5px 15px #cccccc;
+    --unpressed-shadow: 5px 5px 15px #cccccc, -5px -5px 15px #ffffff;
+    --hover-shadow: 1px 1px 15px #cccccc, -1px -1px 15px #ffffff;
   }
 
   .row {
@@ -30,49 +33,50 @@
     flex: 1 1 100%;
   }
 
-  @media all and (min-width: 700px) {
+  @media all and (min-width: 1000px) {
     :root {
-      --input-size: 1.8em;
+      --input-size: 1.7em;
     }
 
     input[type='text'] {
-      min-width: 15em;
-      flex: 1 1 15em;
+      min-width: 8em;
+      flex: 1 1 8em;
     }
+  }
 
-    input:hover {
-      box-shadow: inset 5px 5px 10px #e0e0e0, inset -5px -5px 10px #ffffff;
-    }
-
-    input[type='checkbox']:checked:hover {
-      border: 1px solid var(--habit-color);
+  @media all and (min-width: 1500px) {
+    input[type='text'] {
+      min-width: 12em;
+      flex: 1 1 12em;
     }
   }
 
   input {
     border-radius: 5px;
+    border: 1px solid white;
     background: #ffffff;
-    box-shadow: 5px 5px 10px #e0e0e0, -5px -5px 10px #ffffff;
-    transition: box-shadow 200ms ease-in;
+    box-shadow: var(--unpressed-shadow);
     margin: 0;
     padding: 0;
     margin: 5px;
   }
 
   input[type='color'] {
-    border: 0;
     background: white;
     width: var(--input-size);
     height: var(--input-size);
   }
 
   input[type='text'] {
-    border: 0;
     color: var(--habit-color);
     font-weight: bold;
     font-size: 0.9em;
     padding: 0 0.2em;
     height: var(--input-size);
+  }
+
+  input:hover {
+    border: 1px solid var(--habit-color);
   }
 
   input[type='checkbox'] {
@@ -85,12 +89,11 @@
   }
   input[type='checkbox']:checked {
     color: var(--habit-color);
-    box-shadow: inset 5px 5px 10px #e0e0e0, inset -5px -5px 10px #ffffff;
+    box-shadow: var(--pressed-shadow);
   }
   input[type='checkbox']:before {
     display: block;
     color: var(--habit-color);
-
     content: attr(data-day);
     font-size: 0.9em;
     font-weight: bold;
@@ -100,17 +103,18 @@
     width: 100%;
     height: 100%;
   }
+
   input[type='checkbox']:checked:before {
     display: block;
     position: absolute;
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
     border-radius: 50%;
-    background-color: var(--habit-color);
-    width: calc(100% - 10px);
-    height: calc(100% - 10px);
+    background: var(--habit-color);
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
     margin: 0;
     display: flex;
     align-items: center;
@@ -118,17 +122,7 @@
     line-height: 1;
     content: '✔️';
     color: white !important;
-    font-size: 0.8em;
-  }
-
-  input[type='checkbox']:focus:checked:before,
-  input[type='checkbox']:checked:hover:before {
-    top: 4px;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
+    font-size: 0.7em;
   }
 
   input[type='checkbox']:disabled {
