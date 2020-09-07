@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import HabitRow from './ui/row-wrapper.svelte';
+  import Habit from './core/habit';
+  import { readAll } from './core/firebase';
 
   const date = new Date();
   let month = date.getMonth() + 1;
@@ -19,7 +21,19 @@
   function loadFromLocalStorage() {
     habits = Number(localStorage.getItem('habits-number'));
   }
-  onMount(loadFromLocalStorage);
+
+  async function loadFromFireBase() {
+    const habitData = await readAll('habits');
+    habitData.forEach(dbData => {
+      const habit = new Habit(dbData);
+      habit.saveToLocalStorage();
+    });
+    habits = habitData.length;
+    localStorage.setItem('habits-number', habits);
+    return true;
+  }
+
+  const promise = loadFromFireBase();
 </script>
 
 <style>
@@ -28,36 +42,43 @@
   }
 </style>
 
-<svelte:window on:focus={loadFromLocalStorage} on:blur={saveToLocalStorage} />
-<main>
-  <div>
-    <select bind:value={month}>
-      {#each months as monthNumber}
-        <option>{monthNumber}</option>
-      {/each}
-    </select>
-    <select bind:value={year}>
-      {#each years as yearNumber}
-        <option>{yearNumber}</option>
-      {/each}
-    </select>
-  </div>
-  {#each Array(habits) as _, key}
-    <HabitRow {key} {month} {year} />
-  {/each}
-  <button
-    on:click={e => {
-      habits = habits + 1;
-      saveToLocalStorage(habits);
-    }}>
-    Add habit
-  </button>
-  <button
-    on:click={e => {
-      localStorage.removeItem(habits - 1);
-      habits = habits - 1;
-      saveToLocalStorage(habits);
-    }}>
-    Remove habit
-  </button>
-</main>
+<!-- <svelte:window on:focus={loadFromLocalStorage} on:blur={saveToLocalStorage} /> -->
+
+{#await promise}
+  <p>...Loading</p>
+{:then _}
+  <main>
+    <div>
+      <select bind:value={month}>
+        {#each months as monthNumber}
+          <option>{monthNumber}</option>
+        {/each}
+      </select>
+      <select bind:value={year}>
+        {#each years as yearNumber}
+          <option>{yearNumber}</option>
+        {/each}
+      </select>
+    </div>
+    {#each Array(habits) as _, key}
+      <HabitRow {key} {month} {year} />
+    {/each}
+    <button
+      on:click={e => {
+        habits = habits + 1;
+        saveToLocalStorage(habits);
+      }}>
+      Add habit
+    </button>
+    <button
+      on:click={e => {
+        localStorage.removeItem(habits - 1);
+        habits = habits - 1;
+        saveToLocalStorage(habits);
+      }}>
+      Remove habit
+    </button>
+  </main>
+{:catch error}
+  <p style="color: red">{error.message}</p>
+{/await}
