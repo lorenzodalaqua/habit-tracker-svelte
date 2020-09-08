@@ -5,9 +5,6 @@
 <style>
   :root {
     --input-size: 1.8em;
-    --pressed-shadow: inset -5px -5px 15px #ffffff, inset 5px 5px 15px #cccccc;
-    --unpressed-shadow: 5px 5px 15px #cccccc, -5px -5px 15px #ffffff;
-    --hover-shadow: 1px 1px 15px #cccccc, -1px -1px 15px #ffffff;
   }
 
   .row {
@@ -52,10 +49,10 @@
   }
 
   input {
-    border-radius: 5px;
+    border-radius: 6px;
     border: 1px solid white;
     background: #ffffff;
-    box-shadow: var(--unpressed-shadow);
+    box-shadow: 5px 5px 8px #d6d6d6, -5px -5px 8px #ffffff;
     margin: 0;
     padding: 0;
     margin: 5px;
@@ -89,7 +86,7 @@
   }
   input[type='checkbox']:checked {
     color: var(--habit-color);
-    box-shadow: var(--pressed-shadow);
+    box-shadow: inset -5px -5px 8px #ffffff, inset 5px 5px 8px #d6d6d6;
   }
   input[type='checkbox']:before {
     display: block;

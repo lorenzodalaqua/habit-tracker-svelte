@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import * as firebaseui from 'firebaseui';
 import firestore from 'firebase/firestore'; // Required for side-effects
 
 const config = {
@@ -10,9 +11,18 @@ const config = {
   messagingSenderId: '183449563338',
   appId: '1:183449563338:web:61178c7b8e64909e1a4433'
 };
+
 firebase.initializeApp(config);
 
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
 const db = firebase.firestore();
+
+export function initializeUI(elementID) {
+  ui.start(`#${elementID}`, {
+    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
+  });
+}
 
 export async function storeDoc(collection, name, data) {
   return db.collection(collection).doc(name).set(data);
