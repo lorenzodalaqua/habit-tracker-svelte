@@ -49,10 +49,10 @@
   }
 
   input {
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid white;
     background: #ffffff;
-    box-shadow: 5px 5px 8px #d6d6d6, -5px -5px 8px #ffffff;
+    box-shadow: 1px 1px 4px #cccccc, -1px -1px 4px #ffffff;
     margin: 0;
     padding: 0;
     margin: 5px;
@@ -86,7 +86,7 @@
   }
   input[type='checkbox']:checked {
     color: var(--habit-color);
-    box-shadow: inset -5px -5px 8px #ffffff, inset 5px 5px 8px #d6d6d6;
+    box-shadow: inset -1px -1px 6px #ffffff, inset 1px 1px 6px #cccccc;
   }
   input[type='checkbox']:before {
     display: block;

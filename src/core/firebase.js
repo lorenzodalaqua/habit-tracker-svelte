@@ -14,15 +14,9 @@ const config = {
 
 firebase.initializeApp(config);
 
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
+/* Storage */
 
 const db = firebase.firestore();
-
-export function initializeUI(elementID) {
-  ui.start(`#${elementID}`, {
-    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
-  });
-}
 
 export async function storeDoc(collection, name, data) {
   return db.collection(collection).doc(name).set(data);
@@ -42,4 +36,33 @@ export async function readAll(collection) {
   const docs = [];
   query.forEach(doc => docs.push(doc.data()));
   return docs;
+}
+
+/* Authentication */
+
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+export function initializeUI(elementID) {
+  ui.start(`#${elementID}`, {
+    signInSuccessUrl: '/',
+    signInOptions: [
+      {
+        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: true
+      }
+    ]
+  });
+}
+
+export function setUserUpdateCallback(callback) {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      callback(user);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+export async function signOut() {
+  return firebase.auth().signOut();
 }
