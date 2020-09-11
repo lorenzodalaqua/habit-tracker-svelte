@@ -1,25 +1,33 @@
 <script>
-  import HabitTracker from './ui/habit-tracker.svelte';
-  import Authentication from './ui/authentication.svelte';
+  import Header from './ui/components/header.svelte';
+  import UserOptions from './ui/components/user-options.svelte';
+  import Login from './ui/components/login.svelte';
+  import HabitTracker from './ui/components/habit-tracker.svelte';
+
   import { userStore } from './stores/user-store';
+  import { onDestroy } from 'svelte';
+
   let user = null;
   const unsubscribe = userStore.subscribe(value => {
     user = value;
   });
+
+  const setUser = user => userStore.set(user);
+
+  onDestroy(unsubscribe);
 </script>
 
 <style>
-  div {
-    margin-bottom: 0.5em;
+  main {
+    padding: 8px;
   }
 </style>
 
-<main>
-  <h1>Habit Tracker</h1>
-  <HabitTracker />
-  <!-- {#if user}
-    <div>{user.name}</div>
-  {:else}
-    <div>Login</div>
-  {/if} -->
-</main>
+<div>
+  <Header {user} />
+  <main>
+    <UserOptions {setUser} />
+    <Login />
+    <HabitTracker {user} />
+  </main>
+</div>

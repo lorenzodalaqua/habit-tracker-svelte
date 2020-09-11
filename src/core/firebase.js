@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
-import firestore from 'firebase/firestore'; // Required for side-effects
 
 const config = {
   apiKey: 'AIzaSyB9uI_t8GX_epmaev-vbTugEAQZsYlLfAk',

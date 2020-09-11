@@ -6,9 +6,9 @@ body {
 }
 
 body {
-  color: #333;
+  color: #666;
   margin: 0;
-  padding: 8px;
+  padding: 0;
   box-sizing: border-box;
   font-family: -apple-system, Ubuntu, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Cantarell, 'Helvetica Neue', sans-serif;
@@ -57,4 +57,14 @@ input:disabled {
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+.tab {
+  display: none;
+}
+*:target {
+  display: block;
+}
+*:target ~ #tracker {
+  display: none;
 }

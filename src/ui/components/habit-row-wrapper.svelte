@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { createHabitStore } from '../stores/habit-store';
+  import { createHabitStore } from '../../stores/habit-store';
   import MonthTracker from './habit-row.svelte';
 
   export let key, month, year;
