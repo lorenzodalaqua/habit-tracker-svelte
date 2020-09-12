@@ -47,6 +47,10 @@ export function initializeUI(elementID) {
       {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
         requireDisplayName: true
+      },
+      {
+        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        requireDisplayName: true
       }
     ]
   });

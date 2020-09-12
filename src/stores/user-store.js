@@ -5,6 +5,6 @@ export const userStore = writable(null);
 
 setUserUpdateCallback(user => {
   if (user) {
-    userStore.set({ name: user.displayName, email: user.email });
+    userStore.set({ id: user.uid, name: user.displayName, email: user.email });
   }
 });

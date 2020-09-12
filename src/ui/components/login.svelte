@@ -6,15 +6,9 @@
 </script>
 
 <style>
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
 </style>
 
 <div id="login" class="tab">
-  <div class="container">
-    <h2>Authentication</h2>
-    <div id={ID} />
-  </div>
+  <h2>Authentication</h2>
+  <div id={ID} />
 </div>

@@ -42,6 +42,18 @@
   div {
     margin-bottom: 0.5em;
   }
+  .monthPicker {
+    display: flex;
+  }
+
+  .monthPicker * {
+    width: 100%;
+  }
+  @media all and (min-width: 700px) {
+    .monthPicker {
+      max-width: 20em;
+    }
+  }
 </style>
 
 <!-- <svelte:window on:focus={loadFromLocalStorage} on:blur={saveToLocalStorage} /> -->
@@ -56,7 +68,7 @@
     <div>...Loading</div>
   {:then _}
     <div>
-      <div>
+      <div class="monthPicker">
         <select bind:value={month}>
           {#each months as monthNumber}
             <option>{monthNumber}</option>

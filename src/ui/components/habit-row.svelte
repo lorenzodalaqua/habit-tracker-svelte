@@ -83,6 +83,7 @@
     width: var(--input-size);
     height: var(--input-size);
     display: flex;
+    padding: 0;
   }
   input[type='checkbox']:checked {
     color: var(--habit-color);
@@ -129,6 +130,10 @@
   input:focus {
     outline: none;
     border: 1px solid var(--habit-color);
+  }
+
+  input[type='text']:focus {
+    box-shadow: inset -1px -1px 6px #ffffff, inset 1px 1px 6px #cccccc;
   }
 </style>
 

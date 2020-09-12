@@ -12,8 +12,10 @@
     align-items: center;
     background: white;
     box-shadow: 1px 1px 4px #cccccc, -1px -1px 4px #ffffff;
+    border-radius: 8px;
+    /* border-bottom: 2px solid var(--accent-color); */
     font-size: 1rem;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
   }
 
   h1 {
@@ -30,6 +32,7 @@
         window.location.hash = '';
       }}>Habit Tracker</a>
   </h1>
+
   {#if user}
     <a href="#user">{user.name}</a>
   {:else}<a href="#login">Login</a>{/if}
