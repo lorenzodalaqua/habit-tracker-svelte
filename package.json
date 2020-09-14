@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
+    "build": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public"
+    "start": "sirv public --gzip --http2 -p 6660"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^12.0.0",

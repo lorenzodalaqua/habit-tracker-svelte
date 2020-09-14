@@ -64,42 +64,36 @@
       Your habits are being tracked locally, to save them you need to <a href="#login">Login</a>
     </div>
   {/if}
-  {#await promise}
-    <div>...Loading</div>
-  {:then _}
-    <div>
-      <div class="monthPicker">
-        <select bind:value={month}>
-          {#each months as monthNumber}
-            <option>{monthNumber}</option>
-          {/each}
-        </select>
-        <select bind:value={year}>
-          {#each years as yearNumber}
-            <option>{yearNumber}</option>
-          {/each}
-        </select>
-      </div>
-      {#each Array(habits) as _, key}
-        <HabitRow {key} {month} {year} />
-      {/each}
-      <button
-        on:click={e => {
-          habits = habits + 1;
-          saveToLocalStorage(habits);
-        }}>
-        Add habit
-      </button>
-      <button
-        on:click={e => {
-          localStorage.removeItem(habits - 1);
-          habits = habits - 1;
-          saveToLocalStorage(habits);
-        }}>
-        Remove habit
-      </button>
+  <div>
+    <div class="monthPicker">
+      <select bind:value={month}>
+        {#each months as monthNumber}
+          <option>{monthNumber}</option>
+        {/each}
+      </select>
+      <select bind:value={year}>
+        {#each years as yearNumber}
+          <option>{yearNumber}</option>
+        {/each}
+      </select>
     </div>
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await}
+    {#each Array(habits) as _, key}
+      <HabitRow {key} {month} {year} />
+    {/each}
+    <button
+      on:click={e => {
+        habits = habits + 1;
+        saveToLocalStorage(habits);
+      }}>
+      Add habit
+    </button>
+    <button
+      on:click={e => {
+        localStorage.removeItem(habits - 1);
+        habits = habits - 1;
+        saveToLocalStorage(habits);
+      }}>
+      Remove habit
+    </button>
+  </div>
 </div>
