@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
   import HabitRow from './habit-row-wrapper.svelte';
   import Habit from '../../core/habit';
-  import { readAll } from '../../core/firebase';
+  //import { readAll } from '../../core/firebase';
 
   const date = new Date();
   let month = date.getMonth() + 1;
@@ -25,14 +25,14 @@
   }
 
   async function loadFromFireBase() {
-    const habitData = await readAll('habits');
-    habitData.forEach(dbData => {
-      const habit = new Habit(dbData);
-      habit.saveToLocalStorage();
-    });
-    habits = habitData.length;
-    localStorage.setItem('habits-number', habits);
-    return true;
+    // const habitData = await readAll('habits');
+    // habitData.forEach(dbData => {
+    //   const habit = new Habit(dbData);
+    //   habit.saveToLocalStorage();
+    // });
+    // habits = habitData.length;
+    // localStorage.setItem('habits-number', habits);
+    // return true;
   }
 
   const promise = loadFromFireBase();

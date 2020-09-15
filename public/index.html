@@ -17,11 +17,11 @@
     <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png" />
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js').then(reg => {
-            console.log('Service worker registered.', reg);
-          });
-        });
+        // window.addEventListener('load', () => {
+        //   navigator.serviceWorker.register('/service-worker.js').then(reg => {
+        //     console.log('Service worker registered.');
+        //   });
+        // });
       }
     </script>
 
@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="/global.css" />
     <link rel="stylesheet" href="/build/bundle.css" />
     <link
+      media="print"
+      onload="this.media='all'"
       type="text/css"
       rel="stylesheet"
       href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"

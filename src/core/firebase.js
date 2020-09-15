@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+// TODO: start importing like * as firebase from 'firebase/app', and 'firebase/firestore'
 import * as firebaseui from 'firebaseui';
 
 const config = {

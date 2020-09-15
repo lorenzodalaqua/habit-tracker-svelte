@@ -1,4 +1,4 @@
-import { storeDoc } from './firebase';
+//import { storeDoc } from './firebase';
 
 export default class Habit {
   constructor({ id, name, color, tracker = {} }) {
@@ -75,13 +75,13 @@ export default class Habit {
   }
 
   async saveToDB() {
-    storeDoc('habits', `habit-${this.id}`, {
-      id: this.id,
-      name: this.name,
-      tracker: this.tracker,
-      color: this.color,
-      negative: this.negative
-    });
+    // storeDoc('habits', `habit-${this.id}`, {
+    //   id: this.id,
+    //   name: this.name,
+    //   tracker: this.tracker,
+    //   color: this.color,
+    //   negative: this.negative
+    // });
   }
 
   getRandomColor() {

@@ -36,17 +36,9 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', event => {
-  //console.log('[ServiceWorker] Fetch', event.request.url);
-  // if (event.request.mode !== 'navigate') {
-  //   // Not a page navigation, bail.
-  //   return;
-  // }
   event.respondWith(
-    fetch(event.request).catch(() => {
-      console.log(event.request.url);
-      return caches.open(CACHE_NAME).then(cache => {
-        return cache.match(event.request.url);
-      });
+    caches.match(event.request).then(function (response) {
+      return response || fetch(event.request);
     })
   );
 });

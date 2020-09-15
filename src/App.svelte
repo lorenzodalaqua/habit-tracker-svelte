@@ -1,8 +1,10 @@
 <script>
   import Header from './ui/components/header.svelte';
-  import UserOptions from './ui/components/user-options.svelte';
-  import Login from './ui/components/login.svelte';
   import HabitTracker from './ui/components/habit-tracker.svelte';
+
+  // Pages
+  // import UserOptions from './ui/components/user-options.svelte';
+  // import Login from './ui/components/login.svelte';
 
   import { userStore } from './stores/user-store';
   import { onDestroy } from 'svelte';
@@ -26,8 +28,8 @@
 <div>
   <Header {user} />
   <main>
-    <UserOptions {setUser} />
-    <Login />
+    <!-- <UserOptions {setUser} />
+    <Login online={true} /> -->
     <HabitTracker {user} />
   </main>
 </div>
