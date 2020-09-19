@@ -6,14 +6,12 @@
   // import UserOptions from './ui/components/user-options.svelte';
   // import Login from './ui/components/login.svelte';
 
-  import { userStore } from './stores/user-store';
   import { onDestroy, onMount } from 'svelte';
 
+  const SYNC_INTERVAL = 3000;
+
   let user = null;
-  const unsubscribe = userStore.subscribe(value => {
-    user = value;
-  });
-  const setUser = user => userStore.set(user);
+
   let online = true;
   let synced = false;
   function checkConnectivity() {
@@ -29,14 +27,13 @@
       synced = false;
       setTimeout(() => {
         synced = true;
-        console.log('synced');
       }, 1000);
     }
   }
   onMount(() => {
     window.addEventListener('online', checkConnectivity);
     window.addEventListener('offline', checkConnectivity);
-    setInterval(sync, 2000);
+    setInterval(sync, SYNC_INTERVAL);
   });
   onDestroy(() => {
     unsubscribe();
@@ -59,6 +56,6 @@
     <p>{online ? 'Online' : 'Offline'}</p>
     <!-- <UserOptions {setUser} />
     <Login online={true} /> -->
-    <HabitTracker {user} />
+    <HabitTracker />
   </main>
 </div>

@@ -1,5 +1,34 @@
 <script>
-  export let key, name, setName, color, setColor, toggleDay, days, month, year;
+  export let id, index, month, year;
+  import { onMount, onDestroy } from 'svelte';
+  import habitTrackerStore from '../stores/habit-tracker-store';
+
+  let tracker = null;
+  const unsubscribe = habitTrackerStore.subscribe(value => {
+    tracker = value;
+  });
+  onDestroy(unsubscribe);
+  const today = new Date().getDate();
+  let name, color, days, classes;
+  $: name = tracker.habits[id].name;
+  $: color = tracker.habits[id].color;
+  $: days = tracker.habits[id].getMonthTracker(month, year);
+  $: classes = days ? days.map((value, day) => getCheckboxClass(day)) : [];
+  const placeholders = [
+    'What is your next new habit?',
+    'What habit do you want to track?',
+    'Which habit do you want to reinforce?'
+  ];
+  function getCheckboxClass(day) {
+    let className = '';
+    if (day == today) {
+      className += 'today';
+    }
+    if (day > 0 && days[day] && days[day - 1]) {
+      className += ' streak';
+    }
+    return className;
+  }
 </script>
 
 <style>
@@ -85,10 +114,12 @@
     display: flex;
     padding: 0;
   }
+
   input[type='checkbox']:checked {
     color: var(--habit-color);
     box-shadow: inset -1px -1px 6px #ffffff, inset 1px 1px 6px #cccccc;
   }
+
   input[type='checkbox']:before {
     display: block;
     color: var(--habit-color);
@@ -101,6 +132,17 @@
     width: 100%;
     height: 100%;
   }
+  input[type='checkbox'].today:not(:checked) {
+    background-color: var(--habit-color);
+    border: 1px solid var(--habit-color);
+  }
+
+  input[type='checkbox'].today:not(:checked):focus {
+    border: 1px solid var(--accent-color);
+  }
+  input[type='checkbox'].today:not(:checked):before {
+    color: white;
+  }
 
   input[type='checkbox']:checked:before {
     display: block;
@@ -110,7 +152,6 @@
     left: 4px;
     right: 4px;
     border-radius: 50%;
-    background: var(--habit-color);
     width: calc(100% - 8px);
     height: calc(100% - 8px);
     margin: 0;
@@ -119,17 +160,29 @@
     justify-content: center;
     line-height: 1;
     content: '✔️';
-    color: white !important;
     font-size: 0.7em;
+    color: var(--habit-color);
+    background: white;
   }
 
-  input[type='checkbox']:disabled {
-    background: #efefef;
+  input[type='checkbox'].today:checked:before {
+    background: var(--habit-color);
+    color: white;
+  }
+
+  input[type='checkbox'].streak:after {
+    content: ' ';
+    position: absolute;
+    height: 3px;
+    width: 12px;
+    left: -13px;
+    top: calc(50% - 1px);
+    background: var(--habit-color);
   }
 
   input:focus {
     outline: none;
-    border: 1px solid var(--habit-color);
+    border: 1px solid var(--accent-color);
   }
 
   input[type='text']:focus {
@@ -140,30 +193,32 @@
 <div class="list" style="--habit-color: {color}">
   <div class="row">
     <div class="checkboxes">
-      <label class="hidden" for={`name-${key}`}>Nome do hábito:</label>
+      <label class="hidden" for={`name-${id}`}>Nome do hábito:</label>
       <input
-        id={`name-${key}`}
+        id={`name-${id}`}
         type="text"
-        placeholder="What is your next new habit?"
+        placeholder={placeholders[index % placeholders.length]}
         value={name}
-        on:input={setName} />
+        on:input={event => habitTrackerStore.setHabitName(id, event.target.value)} />
       {#each days as value, day}
-        <label class="hidden" for={`${day}-${key}`}>
+        <label class="hidden" for={`${day}-${id}`}>
           {name} - {day}/{month}/{year}
         </label>
         <input
           data-day={day + 1}
-          id={`${day}-${key}`}
+          class={classes[day]}
+          id={`${day}-${id}`}
           type="checkbox"
           checked={value}
-          on:change={() => toggleDay(day)} />
+          on:change={() => habitTrackerStore.toggleHabitDay(id, day, month, year)} />
       {/each}
-      <label class="hidden" for={`${key}-color`}>Cor do hábito {name}</label>
+      <label class="hidden" for={`${id}-color`}>Cor do hábito {name}</label>
       <input
-        id={`${key}-color`}
+        id={`${id}-color`}
         type="color"
         value={color}
-        on:change={setColor} />
+        on:change={event => habitTrackerStore.setHabitColor(id, event.target.value)} />
+      <button on:click={() => habitTrackerStore.removeHabit(id)}>Delete</button>
     </div>
   </div>
 </div>

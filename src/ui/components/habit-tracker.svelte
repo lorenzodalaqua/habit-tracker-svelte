@@ -1,41 +1,21 @@
 <script>
-  export let user;
+  import { onMount, onDestroy } from 'svelte';
+  import HabitRow from './habit-row.svelte';
+  import habitTrackerStore from '../stores/habit-tracker-store';
 
-  import { onMount } from 'svelte';
-  import HabitRow from './habit-row-wrapper.svelte';
-  import Habit from '../../core/habit';
-  //import { readAll } from '../../core/firebase';
+  let tracker = null;
+  const unsubscribe = habitTrackerStore.subscribe(value => {
+    tracker = value;
+  });
+  onMount(habitTrackerStore.load);
+  onDestroy(unsubscribe);
 
+  // Date and month selection
   const date = new Date();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
-
   const months = new Array(12).fill(0).map((_, i) => i + 1);
   const years = new Array(30).fill(0).map((_, i) => 2020 + i);
-
-  let makeHabits = number => new Array(number).fill(0).map((_, i) => i);
-  let habits = 8;
-  function saveToLocalStorage(number) {
-    if (number > 0) {
-      localStorage.setItem('habits-number', number);
-    }
-  }
-  function loadFromLocalStorage() {
-    habits = Number(localStorage.getItem('habits-number'));
-  }
-
-  async function loadFromFireBase() {
-    // const habitData = await readAll('habits');
-    // habitData.forEach(dbData => {
-    //   const habit = new Habit(dbData);
-    //   habit.saveToLocalStorage();
-    // });
-    // habits = habitData.length;
-    // localStorage.setItem('habits-number', habits);
-    // return true;
-  }
-
-  const promise = loadFromFireBase();
 </script>
 
 <style>
@@ -56,44 +36,34 @@
   }
 </style>
 
-<!-- <svelte:window on:focus={loadFromLocalStorage} on:blur={saveToLocalStorage} /> -->
+<svelte:window
+  on:focus={habitTrackerStore.load}
+  on:blur={habitTrackerStore.save} />
 
 <div id="tracker">
-  {#if !user}
+  {#if !tracker.user}
     <div>
       Your habits are being tracked locally, to save them you need to <a href="#login">Login</a>
     </div>
   {/if}
   <div>
     <div class="monthPicker">
-      <select bind:value={month}>
+      <label class="hidden" for="month"> Month </label>
+      <select bind:value={month} id="month">
         {#each months as monthNumber}
           <option>{monthNumber}</option>
         {/each}
       </select>
-      <select bind:value={year}>
+      <label class="hidden" for="year"> Year </label>
+      <select bind:value={year} id="year">
         {#each years as yearNumber}
           <option>{yearNumber}</option>
         {/each}
       </select>
     </div>
-    {#each Array(habits) as _, key}
-      <HabitRow {key} {month} {year} />
+    {#each Object.keys(tracker.habits) as id, index}
+      <HabitRow {index} {id} {month} {year} />
     {/each}
-    <button
-      on:click={e => {
-        habits = habits + 1;
-        saveToLocalStorage(habits);
-      }}>
-      Add habit
-    </button>
-    <button
-      on:click={e => {
-        localStorage.removeItem(habits - 1);
-        habits = habits - 1;
-        saveToLocalStorage(habits);
-      }}>
-      Remove habit
-    </button>
+    <button on:click={() => habitTrackerStore.addHabit()}> Add habit </button>
   </div>
 </div>

@@ -6,10 +6,10 @@ body {
 }
 
 :root {
-  --text-color: #777;
-  --text-light-color: #aaa;
+  --text-color: #666;
+  --text-light-color: #888;
   --input-size: 1.8em;
-  --accent-color: #0f80f8;
+  --accent-color: #0059b8;
   --gray-color: #c4c4c4;
 }
 @media all and (min-width: 1000px) {

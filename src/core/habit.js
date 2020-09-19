@@ -1,30 +1,31 @@
-//import { storeDoc } from './firebase';
-
 export default class Habit {
-  constructor({ id, name, color, tracker = {} }) {
-    this.id = id;
-    this.name = name;
-    this.tracker = tracker;
-    this.color = color;
+  constructor(args) {
+    this.set(args);
   }
 
   toggleDay(day, month, year) {
     this.ensureTrackerHasMonth(month, year);
     this.tracker[year][month][day] = !this.tracker[year][month][day];
+  }
+
+  set(stored) {
+    this.name = stored.name || '';
+    this.color = stored.color || '#666666';
+    this.tracker = stored.tracker || {};
+    this.negative = stored.negative || false;
     return this;
   }
 
-  setName(name) {
-    this.name = name;
-    return this;
+  serialize() {
+    return {
+      name: this.name,
+      tracker: this.tracker,
+      color: this.color,
+      negative: this.negative
+    };
   }
 
-  setColor(color) {
-    this.color = color;
-    return this;
-  }
-
-  getMonthlyTracking(month, year) {
+  getMonthTracker(month, year) {
     this.ensureTrackerHasMonth(month, year);
     const booleans = this.tracker[year][month];
     return booleans.slice(0, this.getDaysInMonth(month, year));
@@ -59,51 +60,5 @@ export default class Habit {
 
   createNewMonthTracker() {
     return new Array(32).fill(false);
-  }
-
-  saveToLocalStorage() {
-    localStorage.setItem(
-      `habit-${this.id}`,
-      JSON.stringify({
-        id: this.id,
-        name: this.name,
-        tracker: this.tracker,
-        color: this.color,
-        negative: this.negative
-      })
-    );
-  }
-
-  async saveToDB() {
-    // storeDoc('habits', `habit-${this.id}`, {
-    //   id: this.id,
-    //   name: this.name,
-    //   tracker: this.tracker,
-    //   color: this.color,
-    //   negative: this.negative
-    // });
-  }
-
-  getRandomColor() {
-    const key = Math.floor(Math.random() * 6);
-    const colors = [
-      '#f80f80',
-      '#f08f08',
-      '#08f08f',
-      '#0f80f8',
-      '#80f80f',
-      '#8f08f0'
-    ];
-    return colors[key];
-  }
-
-  loadFromLocalStorage(id) {
-    const stored = JSON.parse(localStorage.getItem(`habit-${id}`)) || {};
-    this.id = id;
-    this.name = stored.name || '';
-    this.color = stored.color || this.getRandomColor();
-    this.tracker = stored.tracker || {};
-    this.negative = stored.negative || false;
-    return this;
   }
 }
