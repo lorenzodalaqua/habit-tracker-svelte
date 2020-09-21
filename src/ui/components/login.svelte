@@ -1,16 +1,33 @@
 <script>
   export let online;
-  import { initializeUI } from '../../core/firebase';
   import { onMount } from 'svelte';
+  const modulePromise = import('../../firebase/authentication');
   const ID = 'firebase-ui-authentication';
-  onMount(() => initializeUI(ID));
+  let moduleLoaded = false;
+  let error = false;
+  onMount(() => {
+    modulePromise
+      .then(({ renderFirebaseUIAuth }) => {
+        moduleLoaded = true;
+        renderFirebaseUIAuth(ID);
+      })
+      .catch(e => {
+        console.error(e);
+        error = true;
+      });
+  });
 </script>
 
 <div id="login" class="tab">
   <h2>Authentication</h2>
   {#if online}
-    <div id={ID} />
+    {#if !moduleLoaded}
+      <p>Loading...</p>
+    {:else if error}
+      <p>Error loading login page, please reload or try again later.</p>
+    {/if}
   {:else}
     <p>You are offline, login is not available</p>
   {/if}
+  <div id={ID} />
 </div>

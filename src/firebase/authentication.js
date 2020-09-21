@@ -3,7 +3,7 @@ import * as firebaseui from 'firebaseui';
 
 const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-export function renderFirebaseUIAuhtentication(elementID) {
+export function renderFirebaseUIAuth(elementID) {
   ui.start(`#${elementID}`, {
     signInSuccessUrl: '/',
     signInOptions: [

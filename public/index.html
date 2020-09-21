@@ -28,6 +28,8 @@
     <!-- CSS and JS -->
     <link rel="stylesheet" href="/global.css" />
     <link rel="stylesheet" href="/build/bundle.css" />
+    <script type="module" defer src="/build/main.js"></script>
+    <!-- 3rd party CSS (loaded asynchronously) -->
     <link
       media="print"
       onload="this.media='all'"
@@ -35,12 +37,16 @@
       rel="stylesheet"
       href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
     />
-    <script defer src="/build/bundle.js"></script>
   </head>
 
-  <body></body>
-  <noscript
-    >This application requires Javascript to be enabled to run. If you wish to
-    use it, please enable Javascript or use a different browser.</noscript
-  >
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <p>This application requires Javascript to be enabled to run.</p>
+      <p>
+        If you wish to use it, please enable Javascript or use a different
+        browser.
+      </p>
+    </noscript>
+  </body>
 </html>

@@ -2,16 +2,16 @@ import { db } from '../firebase/storage';
 
 export async function saveHabitTracker(user, tracker) {
   const batch = db.batch();
-  const userRef = db.collection('users').doc(user.uid);
+  const userRef = db.collection('users').doc(user.id);
   batch.set(userRef, tracker.serialize());
   for (let id in tracker.habits) {
-    await saveHabit(user, tracker.habits[id], batch);
+    await saveHabit(user, id, tracker.habits[id], batch);
   }
   return batch.commit();
 }
 
 export async function loadHabitTracker(user) {
-  const doc = await db.collection('users').doc(user.uid);
+  const doc = await db.collection('users').doc(user.id);
   if (doc.exists()) {
     return doc.data();
   } else {
@@ -19,12 +19,12 @@ export async function loadHabitTracker(user) {
   }
 }
 
-export async function saveHabit(user, habit, batch = null) {
+export async function saveHabit(user, id, habit, batch = null) {
   let habitRef = db
     .collection('users')
-    .doc(user.uid)
+    .doc(user.id)
     .collection('habits')
-    .doc(habit.id);
+    .doc(id);
   if (batch) {
     batch.set(habitRef, habit.serialize());
     return true;

@@ -1,9 +1,23 @@
 <script>
-  export let setUser;
+  export let online;
+  import { onMount } from 'svelte';
+  import userStore from '../stores/user-store';
+  const modulePromise = import('../../firebase/authentication');
 
-  import { signOut } from '../../core/firebase';
+  let signOut = null;
+  let error = false;
+  onMount(() => {
+    modulePromise
+      .then(module => {
+        signOut = module.signOut;
+      })
+      .catch(e => {
+        console.error(e);
+        error = true;
+      });
+  });
 
-  let color = '#0f80f8';
+  let color = '#0059b8';
 </script>
 
 <style>
@@ -22,18 +36,23 @@
 <div id="user" class="tab">
   <div class="content">
     <h2>User Options</h2>
-    <label>App color: <input
-        id={`app-color`}
-        type="color"
-        bind:value={color}
-        on:change={e => {
-          document.documentElement.style.setProperty('--accent-color', e.target.value);
-        }} /></label>
-    <button
-      on:click={() => {
-        signOut();
-        setUser(null);
-        window.location.hash = '';
-      }}>Sign out</button>
+    {#if online}
+      <label>App color: <input
+          id={`app-color`}
+          type="color"
+          bind:value={color}
+          on:change={e => {
+            document.documentElement.style.setProperty('--accent-color', e.target.value);
+          }} /></label>
+      <button
+        disabled={!signOut && !error}
+        on:click={() => {
+          signOut();
+          userStore.clear();
+          window.location.hash = '';
+        }}>Sign out</button>
+    {:else}
+      <p>You are offline, user options are not available</p>
+    {/if}
   </div>
 </div>
