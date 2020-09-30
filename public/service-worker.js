@@ -4,7 +4,10 @@ const FILES_TO_CACHE = [
   '/index.html',
   '/global.css',
   '/build/bundle.css',
-  '/build/main.js'
+  '/build/main.js',
+  '/build/app.js',
+  '/build/authentication.js',
+  '/build/habit-tracker-sync.js'
 ];
 
 // Cache files in install event
@@ -38,17 +41,8 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', event => {
   // Network with cache fallback
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        console.log(event.request.url);
-        if (/\/build\/.+/.test(event.request.url))
-          caches
-            .open(CACHE_NAME)
-            .then(cache => cache.put(event.request, response));
-        return response;
-      })
-      .catch(() =>
-        caches.open(CACHE_NAME).then(cache => cache.match(event.request))
-      )
+    fetch(event.request).catch(() =>
+      caches.open(CACHE_NAME).then(cache => cache.match(event.request))
+    )
   );
 });

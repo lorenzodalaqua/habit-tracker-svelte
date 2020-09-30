@@ -12,7 +12,8 @@ export default {
     sourcemap: true,
     format: 'es',
     name: 'app',
-    dir: 'public/build/'
+    dir: 'public/build/',
+    chunkFileNames: '[name].js'
   },
   plugins: [
     svelte({
