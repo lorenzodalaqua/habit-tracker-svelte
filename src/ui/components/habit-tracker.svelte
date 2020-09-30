@@ -3,38 +3,32 @@
   import { onMount, onDestroy } from 'svelte';
   import HabitRow from './habit-row.svelte';
   import habitTrackerStore from '../stores/habit-tracker-store';
+  import appStateStore, { APP_STATES } from '../stores/app-state-store';
+  let syncingModule = null;
+  import('../../core/habit-tracker-sync')
+    .then(value => {
+      syncingModule = value;
+    })
+    .catch(() => {
+      appStateStore.set(APP_STATES.ERROR);
+    });
 
-  let tracker = null;
-  const unsubscribe = habitTrackerStore.subscribe(value => {
+  let tracker;
+  const unsubscribeTracker = habitTrackerStore.subscribe(value => {
     tracker = value;
   });
-  const syncingModule = import('../../core/habit-tracker-sync');
-  // TODO: move the whole saving/loading logic to the habit-tracker class, and make the dynamic import there.
-  // Here we only keep the syncing logic and call the store save/load on interval and on blur/focus
-  // Note: we will have to call the load function after the user is first loaded also.
-  const SYNC_INTERVAL = 3000;
-  const STATES = { SAVED: 'SAVED', SAVING: 'SAVING', FAILED: 'FAILED' };
-  let status = STATES.SAVED;
+  let status;
+  const unsubscribeStatus = appStateStore.subscribe(value => {
+    status = value;
+  });
+
+  const SYNC_INTERVAL = 500;
   function sync() {
     if (online && user) {
-      status = STATES.SAVING;
-      syncingModule
-        .then(({ saveHabitTracker }) => {
-          saveHabitTracker(user, tracker)
-            .then(() => {
-              status = STATES.SAVED;
-            })
-            .catch(e => {
-              console.error(e);
-              status = STATES.FAILED;
-            });
-        })
-        .catch(e => {
-          console.error('module', e);
-          status = STATES.FAILED;
-        });
-    } else {
-      status = STATES.SAVED;
+      if (status === APP_STATES.UNLOADED) {
+        loadFromStorage();
+      }
+      if (status === APP_STATES.UNSAVED_CHANGES) saveToStorage();
     }
   }
   onMount(() => {
@@ -42,9 +36,48 @@
     setInterval(sync, SYNC_INTERVAL);
   });
   onDestroy(() => {
-    unsubscribe();
+    unsubscribeTracker();
+    unsubscribeStatus();
     clearInterval(sync);
   });
+
+  function loadFromStorage() {
+    if (syncingModule && user) {
+      syncingModule
+        .loadHabitTracker(user)
+        .then(stored => {
+          habitTrackerStore.set(stored);
+          appStateStore.set(APP_STATES.SYNCED);
+        })
+        .catch(error => {
+          appStateStore.set(APP_STATES.ERROR);
+          console.error(error);
+        });
+    }
+  }
+  function saveToStorage() {
+    if (user && syncingModule) {
+      appStateStore.set(APP_STATES.SAVING);
+      syncingModule
+        .saveHabitTracker(user, tracker)
+        .then(() => {
+          appStateStore.set(APP_STATES.SYNCED);
+        })
+        .catch(error => {
+          console.error(error);
+          appStateStore.set(APP_STATES.ERROR);
+        });
+    }
+  }
+
+  function onFocus() {
+    habitTrackerStore.load();
+    loadFromStorage();
+  }
+
+  function onBlur() {
+    habitTrackerStore.save();
+  }
 
   // Date and month selection
   const date = new Date();
@@ -72,22 +105,26 @@
   }
 </style>
 
-<svelte:window
-  on:focus={habitTrackerStore.load}
-  on:blur={habitTrackerStore.save} />
+<svelte:window on:focus={onFocus} on:blur={onBlur} />
 
 <div id="tracker">
   {#if user}
-    {#if status == STATES.SAVING}
+    {#if status == APP_STATES.SAVING}
       <div>Saving...</div>
-    {:else if status == STATES.FAILED}
-      <div>Error saving.</div>
-    {:else if status == STATES.SAVED}
-      <div>Saved.</div>
+    {:else if status == APP_STATES.UNLOADED}
+      <div>Loading...</div>
+    {:else if status == APP_STATES.UNSAVED_CHANGES}
+      <div>Unsaved changes.</div>
+    {:else if status == APP_STATES.SYNCED}
+      <div>Synced.</div>
+    {:else if status == APP_STATES.ERROR}
+      <div>Error!</div>
     {/if}
   {:else}
     <div>
-      Your habits are being tracked locally, to save them you need to <a href="#login">Login</a>
+      Warning, your habits are only being tracked locally in your browser, to
+      save them you need to
+      <a href="#login">Login</a>
     </div>
   {/if}
   <div>

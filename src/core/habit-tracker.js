@@ -1,17 +1,26 @@
 import Habit from './habit';
 
+const defaultHabits = {
+  1: new Habit({ id: 1 }),
+  2: new Habit({ id: 2 }),
+  3: new Habit({ id: 3 })
+};
+
 export default class HabitTracker {
   constructor({ habits } = {}) {
     this.set({ habits, lastUpdate: null });
   }
 
   set({ habits, lastUpdate } = {}) {
-    this.habits = habits || {
-      1: new Habit({ id: 1 }),
-      2: new Habit({ id: 2 }),
-      3: new Habit({ id: 3 })
-    };
     this.lastUpdate = lastUpdate;
+    if (habits) {
+      this.habits = {}; // Reset habits to get loaded ones
+      Object.keys(habits).forEach(id => {
+        this.habits[id] = new Habit(habits[id]);
+      });
+    } else {
+      this.habits = defaultHabits;
+    }
   }
 
   updateTimestamp() {
@@ -20,45 +29,19 @@ export default class HabitTracker {
 
   serialize() {
     return {
-      ids: Object.keys(this.habits),
+      habits: Object.keys(this.habits).map(id => this.habits[id].serialize()),
       lastUpdate: this.lastUpdate
     };
   }
 
   save() {
-    this.saveTracker();
-    Object.keys(this.habits).forEach(id => this.saveHabit(id));
-    // TODO: if user is provided and firebase module is loaded, save on firebase here too.
+    localStorage.setItem('habit-tracker', JSON.stringify(this.serialize()));
   }
 
   load() {
     const stored = localStorage.getItem('habit-tracker');
     if (stored) {
-      const { ids } = JSON.parse(stored);
-      this.habits = {}; // Reset habits to get loaded ones
-      ids.forEach(id => this.loadHabit(id));
-    }
-    // TODO: if user is provided and firebase module is loaded, check which version is newer
-    // by the timestamp, and set the value to be from localStorage or firebase, whichever is latest
-  }
-
-  saveTracker() {
-    localStorage.setItem('habit-tracker', JSON.stringify(this.serialize()));
-  }
-
-  saveHabit(id) {
-    const habit = this.habits[id];
-    if (habit) {
-      localStorage.setItem(`habit.${id}`, JSON.stringify(habit.serialize()));
-    }
-  }
-
-  loadHabit(id) {
-    const stored = localStorage.getItem(`habit.${id}`);
-    if (stored) {
-      const newHabit = new Habit({ id });
-      newHabit.set(JSON.parse(stored));
-      this.habits[id] = newHabit;
+      this.set(JSON.parse(stored));
     }
   }
 

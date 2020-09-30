@@ -122,7 +122,7 @@
 
   input[type='checkbox']:before {
     display: block;
-    color: var(--habit-color);
+    color: var(--text-color);
     content: attr(data-day);
     font-size: 0.9em;
     font-weight: bold;
@@ -202,7 +202,9 @@
         on:input={event => habitTrackerStore.setHabitName(id, event.target.value)} />
       {#each days as value, day}
         <label class="hidden" for={`${day}-${id}`}>
-          {name} - {day}/{month}/{year}
+          {name}
+          -
+          {day}/{month}/{year}
         </label>
         <input
           data-day={day + 1}
