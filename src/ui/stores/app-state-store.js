@@ -4,7 +4,8 @@ export const APP_STATES = {
   SAVING: 'SAVING',
   UNSAVED_CHANGES: 'UNSAVED_CHANGES',
   UNLOADED: 'UNLOADED',
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
+  OFFLINE: 'OFFLINE'
 };
 
 const appStateStore = writable(APP_STATES.UNLOADED);

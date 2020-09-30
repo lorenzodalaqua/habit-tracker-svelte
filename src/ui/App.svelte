@@ -12,19 +12,8 @@
   const unsubscribe = userStore.subscribe(store => {
     user = store.user;
   });
-
-  let online = true;
-  function checkConnectivity() {
-    online = navigator.onLine;
-  }
-  onMount(() => {
-    window.addEventListener('online', checkConnectivity);
-    window.addEventListener('offline', checkConnectivity);
-  });
   onDestroy(() => {
     unsubscribe();
-    window.removeEventListener('online', checkConnectivity);
-    window.removeEventListener('offline', checkConnectivity);
   });
 </script>
 
@@ -37,8 +26,8 @@
 <div>
   <Header {user} />
   <main>
-    <UserOptions {online} />
-    <Login {online} />
-    <HabitTracker {user} {online} />
+    <UserOptions />
+    <Login />
+    <HabitTracker {user} />
   </main>
 </div>

@@ -3,8 +3,8 @@ const FILES_TO_CACHE = [
   '/',
   '/index.html',
   '/global.css',
-  '/build/bundle.js',
-  '/build/bundle.css'
+  '/build/bundle.css',
+  '/build/main.js'
 ];
 
 // Cache files in install event
@@ -36,9 +36,19 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', event => {
+  // Network with cache fallback
   event.respondWith(
-    caches.match(event.request).then(function (response) {
-      return response || fetch(event.request);
-    })
+    fetch(event.request)
+      .then(response => {
+        console.log(event.request.url);
+        if (/\/build\/.+/.test(event.request.url))
+          caches
+            .open(CACHE_NAME)
+            .then(cache => cache.put(event.request, response));
+        return response;
+      })
+      .catch(() =>
+        caches.open(CACHE_NAME).then(cache => cache.match(event.request))
+      )
   );
 });

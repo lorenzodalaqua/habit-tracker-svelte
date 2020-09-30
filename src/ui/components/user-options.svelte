@@ -1,5 +1,4 @@
 <script>
-  export let online;
   import { onMount } from 'svelte';
   import userStore from '../stores/user-store';
   const modulePromise = import('../../firebase/authentication');
@@ -12,7 +11,6 @@
         signOut = module.signOut;
       })
       .catch(e => {
-        console.error(e);
         error = true;
       });
   });
@@ -36,8 +34,9 @@
 <div id="user" class="tab">
   <div class="content">
     <h2>User Options</h2>
-    {#if online}
-      <label>App color: <input
+    {#if navigator.onLine}
+      <label>App color:
+        <input
           id={`app-color`}
           type="color"
           bind:value={color}

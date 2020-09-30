@@ -1,5 +1,5 @@
 <script>
-  export let user, online;
+  export let user;
   import { onMount, onDestroy } from 'svelte';
   import HabitRow from './habit-row.svelte';
   import habitTrackerStore from '../stores/habit-tracker-store';
@@ -24,7 +24,7 @@
 
   const SYNC_INTERVAL = 500;
   function sync() {
-    if (online && user) {
+    if (navigator.onLine && user) {
       if (status === APP_STATES.UNLOADED) {
         loadFromStorage();
       }
@@ -116,9 +116,9 @@
     {:else if status == APP_STATES.UNSAVED_CHANGES}
       <div>Unsaved changes.</div>
     {:else if status == APP_STATES.SYNCED}
-      <div>Synced.</div>
+      <div>Synced!</div>
     {:else if status == APP_STATES.ERROR}
-      <div>Error!</div>
+      <div>{navigator.onLine ? 'Error!' : 'Offline'}</div>
     {/if}
   {:else}
     <div>

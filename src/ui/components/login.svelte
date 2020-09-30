@@ -1,5 +1,4 @@
 <script>
-  export let online;
   import { onMount } from 'svelte';
   const modulePromise = import('../../firebase/authentication');
   const ID = 'firebase-ui-authentication';
@@ -12,7 +11,6 @@
         renderFirebaseUIAuth(ID);
       })
       .catch(e => {
-        console.error(e);
         error = true;
       });
   });
@@ -20,7 +18,7 @@
 
 <div id="login" class="tab">
   <h2>Authentication</h2>
-  {#if online}
+  {#if navigator.onLine}
     {#if !moduleLoaded}
       <p>Loading...</p>
     {:else if error}

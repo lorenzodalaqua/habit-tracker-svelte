@@ -5,8 +5,8 @@ const STORAGE_KEY = 'user-store';
 const storedValue = localStorage.getItem(STORAGE_KEY);
 
 const defaultValue = { user: null };
-
 const store = writable(storedValue ? JSON.parse(storedValue) : defaultValue);
+import appStateStore, { APP_STATES } from '../stores/app-state-store';
 
 import('../../firebase/authentication')
   .then(({ onUserUpdate }) => {
@@ -26,10 +26,8 @@ import('../../firebase/authentication')
       }
     });
   })
-  .catch(e => {
-    console.error(e);
-    userStore.set({ user: null, error: true });
-    localStorage.removeItem(STORAGE_KEY);
+  .catch(() => {
+    appStateStore.set(APP_STATES.ERROR);
   });
 
 const userStore = {
