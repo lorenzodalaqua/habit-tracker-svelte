@@ -4,6 +4,7 @@
   import HabitRow from './habit-row.svelte';
   import habitTrackerStore from '../stores/habit-tracker-store';
   import appStateStore, { APP_STATES } from '../stores/app-state-store';
+  import userStore from '../stores/user-store';
   let syncingModule = null;
   import('../../core/habit-tracker-sync')
     .then(value => {
@@ -52,6 +53,9 @@
         .catch(error => {
           appStateStore.set(APP_STATES.ERROR);
           console.error(error);
+          if (error.code == 'permission-denied') {
+            userStore.clear();
+          }
         });
     }
   }
@@ -66,6 +70,9 @@
         .catch(error => {
           console.error(error);
           appStateStore.set(APP_STATES.ERROR);
+          if (error.code == 'permission-denied') {
+            userStore.clear();
+          }
         });
     }
   }

@@ -21,13 +21,23 @@
   ];
   function getCheckboxClass(day) {
     let className = '';
-    if (day == today) {
+    if (day + 1 == today) {
       className += 'today';
     }
     if (day > 0 && days[day] && days[day - 1]) {
       className += ' streak';
     }
     return className;
+  }
+  let deletePromptOpen = false;
+  function deleteHabit(id) {
+    habitTrackerStore.removeHabit(id);
+  }
+  function openDeletePrompt() {
+    deletePromptOpen = true;
+  }
+  function closeDeletePrompt() {
+    deletePromptOpen = false;
   }
 </script>
 
@@ -188,6 +198,21 @@
   input[type='text']:focus {
     box-shadow: inset -1px -1px 6px #ffffff, inset 1px 1px 6px #cccccc;
   }
+
+  .icon-button {
+    color: var(--habit-color);
+    border: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+  }
+
+  .icon {
+    width: 1em;
+    height: 1em;
+  }
 </style>
 
 <div class="list" style="--habit-color: {color}">
@@ -204,7 +229,7 @@
         <label class="hidden" for={`${day}-${id}`}>
           {name}
           -
-          {day}/{month}/{year}
+          {day + 1}/{month}/{year}
         </label>
         <input
           data-day={day + 1}
@@ -220,7 +245,27 @@
         type="color"
         value={color}
         on:change={event => habitTrackerStore.setHabitColor(id, event.target.value)} />
-      <button on:click={() => habitTrackerStore.removeHabit(id)}>Delete</button>
+      <button
+        on:click={deletePromptOpen ? closeDeletePrompt : openDeletePrompt}
+        class="icon-button"><span class="hidden">Delete</span>
+        <svg
+          class="icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"><title>Delete</title>
+          <path
+            d="M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z" /></svg>
+      </button>
     </div>
+    {#if deletePromptOpen}
+      <div>
+        <span>
+          Are you sure you want to delete? You will lose forever all data for
+          this habit.
+        </span>
+        <button on:click={closeDeletePrompt}>Cancel</button><button
+          on:click={() => deleteHabit(id)}>Delete</button>
+      </div>
+    {/if}
   </div>
 </div>
