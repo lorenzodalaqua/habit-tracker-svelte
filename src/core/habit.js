@@ -3,16 +3,11 @@ export default class Habit {
     this.set(args);
   }
 
-  toggleDay(day, month, year) {
-    this.ensureTrackerHasMonth(month, year);
-    this.tracker[year][month][day] = !this.tracker[year][month][day];
-  }
-
   set(stored) {
+    this.id = stored.id;
     this.name = stored.name || '';
-    this.color = stored.color || '#666666';
+    this.color = stored.color || this.getRandomColor(stored.id);
     this.tracker = stored.tracker || {};
-    this.negative = stored.negative || false;
     return this;
   }
 
@@ -20,15 +15,17 @@ export default class Habit {
     return {
       name: this.name,
       tracker: this.tracker,
-      color: this.color,
-      negative: this.negative
+      color: this.color
     };
   }
 
   getMonthTracker(month, year) {
     this.ensureTrackerHasMonth(month, year);
-    const booleans = this.tracker[year][month];
-    return booleans.slice(0, this.getDaysInMonth(month, year));
+    const monthTracker = this.tracker[year][month];
+    const booleans = new Array(this.getDaysInMonth(month, year))
+      .fill(false)
+      .map((_, day) => this.getDayValue(day, monthTracker));
+    return booleans;
   }
 
   getDaysInMonth(month, year) {
@@ -59,6 +56,51 @@ export default class Habit {
   }
 
   createNewMonthTracker() {
-    return new Array(32).fill(false);
+    return 0; // Each mont is a 32-bit integer used as a 32-bit 'array'
+  }
+
+  getDayValue(day, month) {
+    // This is a way to check if the bit indexed by the day value is set
+    // (Shift 1 by the day, and do a bitwise and with the current value, if this
+    // is not zero, the day is set)
+    return !!(month & (1 << day));
+  }
+  setDayValue(day, month) {
+    // This is a way to set the bit indexed by the day value
+    // (Shift 1 by the day, and do a bitwise or with the current value)
+    return month | (1 << day);
+  }
+  clearDayValue(day, month) {
+    // This is a way to clear the bit indexed by the day value
+    // (Shift 1 by the day, invert this and do a bitwise and with the current value)
+    return month & ~(1 << day);
+  }
+
+  toggleDay(day, month, year) {
+    this.ensureTrackerHasMonth(month, year);
+    const monthTracker = this.tracker[year][month];
+    const current = this.getDayValue(day, monthTracker);
+    if (current) {
+      this.tracker[year][month] = this.clearDayValue(day, monthTracker);
+    } else {
+      this.tracker[year][month] = this.setDayValue(day, monthTracker);
+    }
+  }
+
+  getRandomColor(id) {
+    const options = [
+      '#b71ec2',
+      '#d51010',
+      '#de7b00',
+      '#edd60a',
+      '#a8d600',
+      '#1fb800',
+      '#07ca7f',
+      '#108ad5',
+      '#0059b8',
+      '#4c01a7'
+    ];
+    const index = id % options.length;
+    return options[index];
   }
 }

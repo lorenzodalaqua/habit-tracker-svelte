@@ -264,7 +264,10 @@
           this habit.
         </span>
         <button on:click={closeDeletePrompt}>Cancel</button><button
-          on:click={() => deleteHabit(id)}>Delete</button>
+          on:click={() => {
+            deleteHabit(id);
+            closeDeletePrompt();
+          }}>Delete</button>
       </div>
     {/if}
   </div>
