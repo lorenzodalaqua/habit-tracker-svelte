@@ -70,8 +70,6 @@
   label.checkbox svg {
     position: absolute;
     display: none;
-    width: 1em;
-    height: 1em;
   }
 
   input[type='checkbox']:checked ~ svg {
@@ -84,7 +82,21 @@
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     color: var(--habit-color);
+    background: white;
     fill: currentColor;
+  }
+
+  input[type='checkbox'].today:checked ~ svg {
+    background: var(--habit-color);
+    color: white;
+    border-radius: 50%;
+    top: 9px;
+    bottom: 9px;
+    left: 9px;
+    right: 9px;
+    width: calc(100% - 18px);
+    height: calc(100% - 18px);
+    padding: 1px;
   }
 
   input[type='text'] {
@@ -165,6 +177,10 @@
     width: 100%;
     height: 100%;
   }
+  input[type='checkbox']:checked:before {
+    display: none;
+  }
+
   input[type='checkbox'].today:not(:checked) {
     background-color: var(--habit-color);
     border: 1px solid var(--habit-color);
@@ -173,35 +189,8 @@
   input[type='checkbox'].today:not(:checked):focus {
     border: 1px solid var(--accent-color);
   }
+
   input[type='checkbox'].today:not(:checked):before {
-    color: white;
-  }
-
-  input[type='checkbox']:checked:before {
-    content: '';
-    color: var(--habit-color);
-    /* display: block;
-    position: absolute;
-    top: 4px;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
-    border-radius: 50%;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    content: '✓';
-    font-size: 0.7em;
-    color: var(--habit-color);
-    background: white; */
-  }
-
-  input[type='checkbox'].today:checked:before {
-    background: var(--habit-color);
     color: white;
   }
 
