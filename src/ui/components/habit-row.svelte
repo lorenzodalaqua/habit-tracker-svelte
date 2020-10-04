@@ -64,6 +64,29 @@
     flex-wrap: wrap;
   }
 
+  label.checkbox {
+    position: relative;
+  }
+  label.checkbox svg {
+    position: absolute;
+    display: none;
+    width: 1em;
+    height: 1em;
+  }
+
+  input[type='checkbox']:checked ~ svg {
+    position: absolute;
+    display: block;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    color: var(--habit-color);
+    fill: currentColor;
+  }
+
   input[type='text'] {
     min-width: 100%;
     flex: 1 1 100%;
@@ -155,7 +178,9 @@
   }
 
   input[type='checkbox']:checked:before {
-    display: block;
+    content: '';
+    color: var(--habit-color);
+    /* display: block;
     position: absolute;
     top: 4px;
     bottom: 4px;
@@ -172,7 +197,7 @@
     content: '✓';
     font-size: 0.7em;
     color: var(--habit-color);
-    background: white;
+    background: white; */
   }
 
   input[type='checkbox'].today:checked:before {
@@ -226,18 +251,22 @@
         value={name}
         on:input={event => habitTrackerStore.setHabitName(id, event.target.value)} />
       {#each days as value, day}
-        <label class="hidden" for={`${day}-${id}`}>
-          {name}
-          -
-          {day + 1}/{month}/{year}
+        <label class="checkbox" for={`${day}-${id}`}>
+          <span class="hidden">{name} - {day + 1}/{month}/{year}</span>
+          <input
+            data-day={day + 1}
+            class={classes[day]}
+            id={`${day}-${id}`}
+            type="checkbox"
+            checked={value}
+            on:change={() => habitTrackerStore.toggleHabitDay(id, day, month, year)} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            viewBox="0 0 25 25"><path
+              d="M12.98 20.744a3.094 3.094 0 01-4.789.235l-5.575-6.176a2.389 2.389 0 01.176-3.377 2.398 2.398 0 013.383.176l3.944 4.37a.291.291 0 00.45-.023l8.108-10.976a2.398 2.398 0 013.35-.506 2.388 2.388 0 01.505 3.343z" /></svg>
         </label>
-        <input
-          data-day={day + 1}
-          class={classes[day]}
-          id={`${day}-${id}`}
-          type="checkbox"
-          checked={value}
-          on:change={() => habitTrackerStore.toggleHabitDay(id, day, month, year)} />
       {/each}
       <label class="hidden" for={`${id}-color`}>Cor do hábito {name}</label>
       <input
