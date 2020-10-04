@@ -169,7 +169,7 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    content: '✔️';
+    content: '✓';
     font-size: 0.7em;
     color: var(--habit-color);
     background: white;
