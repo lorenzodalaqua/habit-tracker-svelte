@@ -8,8 +8,10 @@
     tracker = value;
   });
   onDestroy(unsubscribe);
-  const today = new Date().getDate();
-  let name, color, days, classes;
+  const date = new Date();
+  const today = date.getDate();
+  let name, color, days, classes, isCurrentMonth;
+  $: isCurrentMonth = date.getMonth() + 1 === month;
   $: name = tracker.habits[id].name;
   $: color = tracker.habits[id].color;
   $: days = tracker.habits[id].getMonthTracker(month, year);
@@ -21,7 +23,7 @@
   ];
   function getCheckboxClass(day) {
     let className = '';
-    if (day + 1 == today) {
+    if (isCurrentMonth && day + 1 == today) {
       className += 'today';
     }
     if (day > 0 && days[day] && days[day - 1]) {
