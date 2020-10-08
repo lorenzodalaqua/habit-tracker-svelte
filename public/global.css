@@ -117,12 +117,25 @@ select:hover {
 }
 
 input:focus,
-select:focus,
-button:focus {
+select:focus {
   outline: 0;
-  border: 1px solid var(--accent-color);
+  border: 1px solid currentColor;
   box-shadow: var(--light-mode-pressed-shadow);
 }
+
+button:focus {
+  outline: 0;
+  border: 1px solid currentColor;
+}
+
+button:active {
+  box-shadow: var(--light-mode-pressed-shadow);
+}
+
+input[type='checkbox']:not(:checked):focus {
+  box-shadow: var(--light-mode-shadow);
+}
+
 input[type='checkbox']:checked {
   box-shadow: var(--light-mode-pressed-shadow);
 }
