@@ -78,7 +78,6 @@
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     color: var(--habit-color);
-    background: white;
     fill: currentColor;
   }
 
