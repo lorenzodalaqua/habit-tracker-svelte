@@ -1,19 +1,15 @@
 <script>
-  import { onMount } from 'svelte';
+  export let user;
   import userStore from '../stores/user-store';
-  const modulePromise = import('../../firebase/authentication');
-
-  let signOut = null;
-  let error = false;
-  onMount(() => {
-    modulePromise
-      .then(module => {
-        signOut = module.signOut;
-      })
-      .catch(e => {
-        error = true;
-      });
-  });
+  import appStateStore, { APP_STATES } from '../stores/app-state-store';
+  let authModule = null;
+  import('../../firebase/authentication')
+    .then(value => {
+      authModule = value;
+    })
+    .catch(() => {
+      appStateStore.set(APP_STATES.ERROR);
+    });
 
   let color = '#0059b8';
 </script>
@@ -33,7 +29,7 @@
 
 <div id="user" class="tab">
   <div class="content">
-    <h2>User Options</h2>
+    <h2>Settings</h2>
     {#if navigator.onLine}
       <label>App color:
         <input
@@ -44,9 +40,10 @@
             document.documentElement.style.setProperty('--accent-color', e.target.value);
           }} /></label>
       <button
-        disabled={!signOut && !error}
+        class="accent-color"
+        disabled={!authModule}
         on:click={() => {
-          signOut();
+          authModule.signOut();
           userStore.clear();
           window.location.hash = '';
         }}>Sign out</button>

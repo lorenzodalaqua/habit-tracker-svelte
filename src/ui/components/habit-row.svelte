@@ -1,6 +1,6 @@
 <script>
   export let id, index, month, year;
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy } from 'svelte';
   import habitTrackerStore from '../stores/habit-tracker-store';
 
   let tracker = null;
@@ -51,7 +51,7 @@
   .row {
     width: 100%;
     margin: 0;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.1em;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -69,29 +69,25 @@
   }
 
   .checkbox:checked ~ svg {
+    --checkmark-size: 10px;
     position: absolute;
     display: block;
-    top: 10px;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
+    top: var(--checkmark-size);
+    bottom: var(--checkmark-size);
+    left: var(--checkmark-size);
+    right: var(--checkmark-size);
+    width: calc(100% - 2 * var(--checkmark-size));
+    height: calc(100% - 2 * var(--checkmark-size));
     color: var(--habit-color);
     fill: currentColor;
   }
 
   .checkbox.today:checked ~ svg {
+    --checkmark-size: 9px; /* Shrink checkmark because of padding */
+    padding: 1px;
     background: var(--habit-color);
     color: white;
     border-radius: 50%;
-    top: 9px;
-    bottom: 9px;
-    left: 9px;
-    right: 9px;
-    width: calc(100% - 18px);
-    height: calc(100% - 18px);
-    padding: 1px;
   }
 
   .checkbox:before {
@@ -150,6 +146,14 @@
       flex: 1 1 15em;
     }
   }
+
+  .delete-prompt {
+    display: flex;
+    align-items: center;
+  }
+  .delete-prompt > * {
+    padding: 10px;
+  }
 </style>
 
 <div style="--habit-color: {color}">
@@ -199,16 +203,19 @@
     </button>
   </div>
   {#if deletePromptOpen}
-    <div class="habit-color">
+    <div class="habit-color delete-prompt">
       <span>
         Are you sure you want to delete? You will lose forever all data for this
         habit.
       </span>
-      <button on:click={closeDeletePrompt}>Cancel</button><button
-        on:click={() => {
-          deleteHabit(id);
-          closeDeletePrompt();
-        }}>Delete</button>
+      <span>
+        <button on:click={closeDeletePrompt}>Cancel</button>
+        <button
+          on:click={() => {
+            deleteHabit(id);
+            closeDeletePrompt();
+          }}>Delete</button>
+      </span>
     </div>
   {/if}
 </div>

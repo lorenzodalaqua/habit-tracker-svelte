@@ -1,9 +1,7 @@
 import Habit from './habit';
 
 const defaultHabits = {
-  1: new Habit({ id: 1 }),
-  2: new Habit({ id: 2 }),
-  3: new Habit({ id: 3 })
+  1: new Habit({ id: 1 })
 };
 
 export default class HabitTracker {

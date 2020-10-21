@@ -18,6 +18,7 @@ body {
 }
 
 :root {
+  --border-radius: 8px;
   --input-size: 2.4em;
   --font-size: 1em;
 }
@@ -54,7 +55,7 @@ h6 {
   margin: 0;
   margin-bottom: 0.5em;
   color: var(--text-color);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 5px;
   border-bottom: 2px solid var(--accent-color);
 }
@@ -88,7 +89,7 @@ label {
 input,
 select,
 button {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background: white;
   border: 1px solid white;
   color: currentColor;
@@ -179,6 +180,9 @@ input[type='checkbox'] {
 }
 
 /* Utility classes */
+.accent-color {
+  color: var(--accent-color);
+}
 
 .hidden {
   position: absolute;
