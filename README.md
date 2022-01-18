@@ -2,6 +2,6 @@
 
 Simple project to track my own habits.
 
-Very early stage.
+Very early stage. [See it live here](https://habit-tracker-v.netlify.app/).
 
-Uses svelte for the frontend and firebase as the backend.
+Uses Svelte for the frontend and Firebase as the backend.
